@@ -3,27 +3,28 @@ import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ICompany } from "./Company.model";
+import { IEmployee } from "./Employee.model";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { number, string } from "yup";
+import moment from "moment/moment";
 
-const CompanyTable = () => {
+const EmployeeTable = () => {
   const navigate = useNavigate();
 
-  const [rows, setRows] = useState<ICompany[]>([]);
+  const [rows, setRows] = useState<IEmployee[]>([]);
 
   const [searchValue, setSearchValue] = useState<string | number>("");
 
   useEffect(() => {
-    getAllClompanies();
+    getAllEmployees();
   }, []);
 
-  const getAllClompanies = () => {
+  const getAllEmployees = () => {
     axios
-      .get("http://localhost:8081/api/company")
+      .get("http://localhost:8081/api/employee")
       .then((response) => {
         setRows(response?.data);
       })
@@ -36,10 +37,10 @@ const CompanyTable = () => {
   const deleteAction = (cellValues?: Record<string, any>) => {
     // bazoume tin logiki, me to pou sbinoume mia eggrafi, na ksanaferoume ta dedomena mas etsi wste na min emfanizetai pia
     axios
-      .delete(`http://localhost:8081/api/company/${cellValues?.row?.id}`)
+      .delete(`http://localhost:8081/api/employee/${cellValues?.row?.id}`)
       .then(() => {
-        toast.error("company deleted!");
-        getAllClompanies();
+        toast.error("employee deleted!");
+        getAllEmployees();
       })
       .catch((error) => {
         console.log(error);
@@ -49,7 +50,7 @@ const CompanyTable = () => {
 
   const clearAction = () => {
     setSearchValue("");
-    axios.get("http://localhost:8081/api/company").then((response) => {
+    axios.get("http://localhost:8081/api/employee").then((response) => {
       setRows(response?.data);
     });
   };
@@ -57,14 +58,14 @@ const CompanyTable = () => {
   const searchAction = () => {
     if (!!Number(searchValue)) {
       axios
-        .get(`http://localhost:8081/api/company/${searchValue}`)
+        .get(`http://localhost:8081/api/employee/${searchValue}`)
         .then((response) => {
           setRows([response?.data]);
         })
         .catch((error) => {
           console.log(error);
           setRows([]);
-          toast.warning(`No company with ID: ${searchValue} found.`);
+          toast.warning(`No employee with ID: ${searchValue} found.`);
         });
     }
   };
@@ -77,18 +78,27 @@ const CompanyTable = () => {
     },
     {
       field: "name",
-      headerName: "name",
+      headerName: "Name",
       flex: 2,
     },
     {
-      field: "address",
-      headerName: "address",
+      field: "surName",
+      headerName: "Surname",
       flex: 2,
     },
     {
-      field: "phone",
-      headerName: "phone",
+      field: "startDate",
+      headerName: "Start Date",
       flex: 1,
+      renderCell: (params) => `${moment(params?.value).format("DD/MM/YYYY")}`,
+    },
+    {
+      field: "salary",
+      headerName: "Salary",
+      headerAlign: "right",
+      align: "right",
+      flex: 1,
+      renderCell: (params) => `${Number(params?.value).toFixed(2)}€`,
     },
     {
       field: "actions",
@@ -99,7 +109,7 @@ const CompanyTable = () => {
           <>
             <IconButton
               color="primary"
-              onClick={() => navigate(`/company/${cellValues?.row?.id}`)}
+              onClick={() => navigate(`/employee/${cellValues?.row?.id}`)}
             >
               <ReadMoreIcon />
             </IconButton>
@@ -127,7 +137,7 @@ const CompanyTable = () => {
           width: 900,
         }}
       >
-        <h1>Company List</h1>
+        <h1>Employee List</h1>
         <div
           style={{
             display: "flex",
@@ -135,7 +145,7 @@ const CompanyTable = () => {
             justifyContent: "center",
           }}
         >
-          <IconButton color="primary" onClick={() => navigate(`/company/new`)}>
+          <IconButton color="primary" onClick={() => navigate(`/employee/new`)}>
             <AddIcon />
           </IconButton>
         </div>
@@ -192,4 +202,4 @@ const CompanyTable = () => {
   );
 };
 
-export default CompanyTable;
+export default EmployeeTable;

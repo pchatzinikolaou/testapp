@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, TextField } from "@mui/material";
+import { FormControl, FormLabel, Select, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { addErrorIntoField } from "../utils";
 import ErrorMessage from "./ErrorMessage";
@@ -9,7 +9,7 @@ interface MuiTextFieldProps {
   control: any;
   name: string;
   errors: any;
-  type: string;
+  children?: any;
 }
 const MuiTextField = ({
   label,
@@ -17,7 +17,7 @@ const MuiTextField = ({
   control,
   name,
   errors,
-  type,
+  children,
 }: MuiTextFieldProps) => {
   return (
     <FormControl fullWidth sx={{ mb: "1rem" }}>
@@ -26,14 +26,15 @@ const MuiTextField = ({
         name={name}
         control={control}
         render={({ field }: any) => (
-          <TextField
-            type={type}
+          <Select
             {...field}
             {...addErrorIntoField(errors[name])}
             required
             variant="outlined"
             InputProps={inputProps}
-          />
+          >
+            {children}
+          </Select>
         )}
       />
       {errors[name] ? <ErrorMessage message={errors[name].message} /> : null}

@@ -12,6 +12,9 @@ export default function Root() {
             <li>
               <Link to={`/company`}>Company</Link>
             </li>
+            <li>
+              <Link to={`/employee`}>Employee</Link>
+            </li>
           </ul>
         </nav>
       </div>

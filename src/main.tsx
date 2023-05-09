@@ -9,6 +9,8 @@ import CompanyForm from "./pages/company/CompanyForm";
 import CompanyTable from "./pages/company/CompanyTable";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import EmployeeTable from "./pages/employee/EmployeeTable";
+import EmployeeForm from "./pages/employee/EmployeeForm";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +18,6 @@ const router = createBrowserRouter([
     element: (
       <>
         <Root />
-        <ToastContainer />
       </>
     ),
     errorElement: <Error />,
@@ -36,6 +37,18 @@ const router = createBrowserRouter([
       {
         path: "/company/new",
         element: <CompanyForm />,
+      },
+      {
+        path: "/employee",
+        element: <EmployeeTable />,
+      },
+      {
+        path: "/employee/:id",
+        element: <EmployeeForm />,
+      },
+      {
+        path: "/employee/new",
+        element: <EmployeeForm />,
       },
     ],
   },
